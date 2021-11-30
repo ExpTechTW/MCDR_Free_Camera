@@ -53,7 +53,10 @@ def on_info(server: PluginServerInterface, info: Info):
         else:
             server.execute('execute as {} in {} run teleport {} {} {}'.format( name, Json[name+'D'], Json[name+'X'], Json[name+'Y'], Json[name+'Z']))
             server.execute('gamemode survival {}'.format(name))
-
+    elif info.is_player and info.content.startswith('!!tp'):
+        data=info.content.split(' ')
+        if server.rcon_query('data get entity {} playerGameType'.format(data[1])).find('3') != -1 and server.rcon_query('data get entity {} playerGameType'.format(data[2])).find('3') != -1:
+            server.execute('tp {} {}'.format(data[1],data[2]))
 
 def on_load(server, old):
     server.register_help_message('!!cam', '切換自由視角')
